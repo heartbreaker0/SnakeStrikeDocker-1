@@ -3,8 +3,8 @@
 
 FROM ubuntu:16.04 as base-smt-build
 LABEL   description="A container that takes care of all the dependencies required to run SnakeStrike." \
-	maintainer="Grady Jensen <grady.jensen@brml.org>" \
-	version="1.0.0" 
+	maintainer="Heart Breaker <lyh2000free@bionicbeer.org>" \
+	version="0.0.1" 
 ARG NUM_THREADS_FOR_BUILDS=2
 ENV THREADS_FOR_BUILDS=${NUM_THREADS_FOR_BUILDS}
 
@@ -13,6 +13,13 @@ COPY env_setup.sh /home
 
 ###################################################################
 # Configure 3rd-party apt repos, add foreign arches, and update OS
+
+# replace the apt source to tuna's source
+#RUN rm /etc/apt/sources.list
+#RUN echo "deb http://archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse" >>/etc/apt/sources.list \
+#	echo "deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted universe multiverse" >>/etc/apt/sources.list \
+#	echo "deb http://archive.ubuntu.com/ubuntu/ xenial-backports main restricted universe multiverse" >>/etc/apt/sources.list \
+#	echo "deb http://archive.ubuntu.com/ubuntu/ xenial-security main restricted universe multiverse" >>/etc/apt/sources.list
 
 # update OS
 RUN apt-get update && \
@@ -26,7 +33,7 @@ RUN apt-get update && apt-get -y install \
 		apt-transport-https \
 		build-essential \
 		linux-libc-dev \
-	      	libusb-1.0-0-dev \
+	    libusb-1.0-0-dev \
 	 	libusb-dev \
 		libudev-dev \
 		libblas-dev \
@@ -42,7 +49,7 @@ RUN apt-get update && apt-get -y install \
 RUN apt-get -y install \
 	locales \
 	git \
-      	cmake \
+    cmake \
 	cmake-gui \
 	sharutils \
 	net-tools \
@@ -50,14 +57,14 @@ RUN apt-get -y install \
 	xvfb \
 	xauth \
 	wget \
-        sudo \
+    sudo \
 	usbutils \
 	module-init-tools	 
 
 ################################################
 ### Install Dependencies for Qt 5 
 RUN apt-get update && apt-get -y install \
-			bison \ 
+			bison \
 			build-essential \
 			flex \
 			gperf \
@@ -131,24 +138,24 @@ RUN apt-get update && apt-get -y install \
 ###############################################
 #PCL Requirements
 RUN apt-get -y install \
-      	mpi-default-dev \
+    mpi-default-dev \
 	openmpi-bin \
 	openmpi-common  \
-      	libflann1.8 \
+    ibflann1.8 \
 	libflann-dev \
 	libeigen3-dev \
-      	libboost-all-dev \
-      	libvtk5.10-qt4 \
+    libboost-all-dev \
+    libvtk5.10-qt4 \
 	libvtk5.10 \
 	libvtk5-dev \
-      	libqhull* \
+    libqhull* \
 	libgtest-dev \
-      	freeglut3-dev \
+    freeglut3-dev \
 	pkg-config \
-      	libxmu-dev \
+    libxmu-dev \
 	libxi-dev \ 
-      	mono-complete \
-      	qt-sdk \
+    mono-complete \
+    qt-sdk \
 	openjdk-8-jdk \
 	openjdk-8-jre
 
@@ -221,9 +228,9 @@ RUN mkdir -p "${HOME}/Libraries"
 ###############################################
 # Install intel mkl library
 RUN 	cd /tmp && \
-	wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
-	apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
-	sh -c 'echo deb https://apt.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list' && \
+	wget https://apt-get.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+	apt-get-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB && \
+	sh -c 'echo deb https://apt-get.repos.intel.com/mkl all main > /etc/apt/sources.list.d/intel-mkl.list' && \
 	apt-get update && \
 	apt-get -y install intel-mkl-64bit-2018.2-046 && \
 	cd $WORKDIR
@@ -235,7 +242,7 @@ RUN 	cd /tmp && \
 #ENV DEBIAN_FRONTEND noninteractive
 #COPY	./Libraries/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb "${HOME}/Libraries/cuda-repo-#ubuntu1604_9.0.176-1_amd64.deb" 
 #RUN 	dpkg -i "${HOME}/Libraries/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb" && \
-#	apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/#x86_64/7fa2af80.pub && \
+#	apt-get-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/#x86_64/7fa2af80.pub && \
 #	apt-get update && \
 #	apt-get -y install --no-install-recommends cuda
 
